@@ -223,7 +223,7 @@ class Yahtzee(GameGui, Player):
             json_data["player_scores"], key=lambda i: i["score"], reverse=True
         )
         for index, (score, name) in enumerate(
-            [(i["score"], i["name"]) for i in sorted_scores[:10]], start=1
+            ((i["score"], i["name"]) for i in sorted_scores[:10]), start=1
         ):
             highscore_item = tk.Label(
                 self.game.end_frame,
@@ -302,7 +302,6 @@ class Yahtzee(GameGui, Player):
                 font=(None, 18, "bold"),
                 bg=self.game.popup_frame_bg_color,
             )
-            self.game.update_idletasks()
         else:
             game_over = f"Game over!"
             display_winner = tk.Label(
@@ -311,7 +310,7 @@ class Yahtzee(GameGui, Player):
                 font=(None, 18, "bold"),
                 bg=self.game.popup_frame_bg_color,
             )
-            self.game.update_idletasks()
+        self.game.update_idletasks()
         display_player_final_scores = [
             tk.Label(
                 self.game.end_frame,
@@ -360,40 +359,25 @@ class Yahtzee(GameGui, Player):
         Iterates over each players bonus categories and creates labels for displaying them."""
         bonus_category_alignment_dict = {"upper bonus": 40, "yahtzee bonus": 60}
         for index, player in zip(range(1, 4, 2), self.active_players):
+            if len(self.active_players) < 2:
+                index = 2
             for _, (category, score), in enumerate(
                 player.board.score_board_dict.items()
             ):
-                if len(self.active_players) < 2:
-                    index = 2
                 if category in bonus_category_alignment_dict.keys():
-                    if category == "upper bonus":
-                        category_label = tk.Label(
-                            self.game.end_frame,
-                            text=f"{category.title()}: {score}",
-                            font=(None, 12),
-                            bg=self.game.popup_frame_bg_color,
-                        )
-                        category_label.place(
-                            x=(self.game.end_frame_x // 4 * index) - 10,
-                            y=self.game.end_frame_y // 2
-                            + bonus_category_alignment_dict[category],
-                            anchor="center",
-                        )
-                        self.game.update_idletasks()
-                    else:
-                        category_label = tk.Label(
-                            self.game.end_frame,
-                            text=f"{category.title()}: {score}",
-                            font=(None, 12),
-                            bg=self.game.popup_frame_bg_color,
-                        )
-                        category_label.place(
-                            x=(self.game.end_frame_x // 4 * index) - 10,
-                            y=self.game.end_frame_y // 2
-                            + (bonus_category_alignment_dict[category]),
-                            anchor="center",
-                        )
-                        self.game.update_idletasks()
+                    category_label = tk.Label(
+                        self.game.end_frame,
+                        text=f"{category.title()}: {score}",
+                        font=(None, 12),
+                        bg=self.game.popup_frame_bg_color,
+                    )
+                    category_label.place(
+                        x=(self.game.end_frame_x // 4 * index) - 10,
+                        y=self.game.end_frame_y // 2
+                        + bonus_category_alignment_dict[category],
+                        anchor="center",
+                    )
+                    self.game.update_idletasks()
 
     def end_of_game_buttons(self):
         """Creates buttons to be drawn to the screen for Play Again, View Highscores and Quit Game functions.
