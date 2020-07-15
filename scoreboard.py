@@ -76,21 +76,13 @@ class ScoreKeeper:
             if category not in ["yahtzee bonus", "upper bonus"]:
                 if score is None:
                     score = "-"
-                    category_button = tk.Label(
-                        self.game.canvas,
-                        text=f"{score}",
-                        font=(None, 15),
-                        bg=self.game.main_bg_color,
-                        fg="black",
-                    )
-                else:
-                    category_button = tk.Label(
-                        self.game.canvas,
-                        text=f"{score}",
-                        font=(None, 15),
-                        bg=self.game.main_bg_color,
-                        fg="black",
-                    )
+                category_button = tk.Label(
+                    self.game.canvas,
+                    text=f"{score}",
+                    font=(None, 15),
+                    bg=self.game.main_bg_color,
+                    fg="black",
+                )
                 category_button.place(x=slot, y=40 * index - 2.5, anchor="s")
                 self.game.player_scores[
                     category_button["text"].lower()

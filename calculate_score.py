@@ -42,13 +42,12 @@ class Scorer:
         Checks if the user_category_selection has been called before and is no longer None.
             If so,it assigns the corresponding roll function to the players score dict."""
         self.user_category_selection = user_category_selection
-        if self.is_yahtzee():
-            if (
-                self.score_board.score_board_dict["yahtzee"] != None
-                and self.score_board.score_board_dict["yahtzee"] != 0
-            ):
-                self.score_board.score_board_dict["yahtzee bonus"] += 100
-        if self.score_board.score_board_dict[user_category_selection] == None:
+        if self.is_yahtzee() and (
+            self.score_board.score_board_dict["yahtzee"] != None
+            and self.score_board.score_board_dict["yahtzee"] != 0
+        ):
+            self.score_board.score_board_dict["yahtzee bonus"] += 100
+        if self.score_board.score_board_dict[user_category_selection] is None:
             self.score_board.score_board_dict[
                 user_category_selection
             ] = self.category_function_dict[user_category_selection]()
@@ -66,10 +65,8 @@ class Scorer:
                 for i in self.roll_result
                 if i == self.singles[self.user_category_selection]
             )
-            return score
         else:
             score = 0
-            return score
         return score
 
     def three_of_a_kind(self):
@@ -80,11 +77,11 @@ class Scorer:
             or self.roll_result[1] == self.roll_result[3]
             or self.roll_result[2] == self.roll_result[4]
         ):
-            score = sum(i for i in self.roll_result)
-            return score
+            score = sum(self.roll_result)
         else:
             score = 0
-            return score
+
+        return score
 
     def four_of_a_kind(self):
         """Algorithm to detect at least four dice the same"""
@@ -93,59 +90,56 @@ class Scorer:
             self.roll_result[0] == self.roll_result[3]
             or self.roll_result[1] == self.roll_result[4]
         ):
-            score = sum(i for i in self.roll_result)
-            return score
+            score = sum(self.roll_result)
         else:
             score = 0
-            return score
+
+        return score
 
     def full_house(self):
         """Algorithm to detect three of one number and two of another"""
         self.roll_result.sort()
         if len(set(self.roll_result)) != 2:
             score = 0
-            return score
         elif (
             self.roll_result[0] != self.roll_result[3]
             and self.roll_result[1] != self.roll_result[4]
         ):
             score = 25
-            return score
         else:
             score = 0
-            return score
+
+        return score
 
     def small_straight(self):
         """Algorithm to detect four sequential dice"""
         self.roll_result.sort()
         if len(set(self.roll_result)) < 4:
             score = 0
-            return score
         elif (
             (len(set([1, 2, 3, 4]).intersection(set(self.roll_result))) == 4)
             or (len(set([2, 3, 4, 5]).intersection(set(self.roll_result))) == 4)
             or (len(set([3, 4, 5, 6]).intersection(set(self.roll_result))) == 4)
         ):
             score = 30
-            return score
         else:
             score = 0
-            return score
+
+        return score
 
     def large_straight(self):
         """Algorithm to detect five sequential dice"""
         self.roll_result.sort()
         if len(set(self.roll_result)) < 5:
             score = 0
-            return score
         elif (len(set([1, 2, 3, 4, 5]).intersection(set(self.roll_result))) == 5) or (
             len(set([2, 3, 4, 5, 6]).intersection(set(self.roll_result))) == 5
         ):
             score = 40
-            return score
         else:
             score = 0
-            return score
+
+        return score
 
     def yathzee(self):
         """Algorithm to detect that all five dice are the same"""
@@ -159,12 +153,8 @@ class Scorer:
 
     def is_yahtzee(self):
         """Function used to check if any given roll is a Yahtzee(all five dice are the same)."""
-        if len(set(self.roll_result)) == 1:
-            return True
-        else:
-            return False
+        return len(set(self.roll_result)) == 1
 
     def chance(self):
         """Algorithm to compute any combination of roll result"""
-        score = sum(self.roll_result)
-        return score
+        return sum(self.roll_result)
